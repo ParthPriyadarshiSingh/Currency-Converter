@@ -1,19 +1,25 @@
-const BASE_URL = "https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies";
+const BASE_URL = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies";
 const dropdowns = document.querySelectorAll(".dropdown select");
 const btn = document.querySelector("button");
 const fromCurr = document.querySelector(".from select");
 const toCurr = document.querySelector(".to select");
-
 const msg = document.querySelector(".msg");
-for(let select of dropdowns){ //this will have two select tags
-    for(currCode in countryList){ //countryList is an object with several keys and corresponding values. currCode will contain key, which is currency code.
+const currentDate = new Date();
+const year = currentDate.getFullYear();
+const month = currentDate.getMonth() + 1; // Month is 0-indexed, so add 1
+const day = currentDate.getDate();
+
+const date = day + "/" + month + "/" + year;
+
+for (let select of dropdowns) { //this will have two select tags
+    for (currCode in countryList) { //countryList is an object with several keys and corresponding values. currCode will contain key, which is currency code.
         let newOption = document.createElement("option");
         newOption.innerText = currCode;
         newOption.value = currCode;
-        if(select.name==="from" && currCode==="AUD"){ //these four lines will decide the default currencies for conversion.
+        if (select.name === "from" && currCode === "AUD") { //these four lines will decide the default currencies for conversion.
             newOption.selected = "selected";
-        } else if (select.name==="to" && currCode==="INR"){
-            newOption.selected= "selected";
+        } else if (select.name === "to" && currCode === "INR") {
+            newOption.selected = "selected";
         }
         select.append(newOption);
     }
@@ -25,14 +31,14 @@ for(let select of dropdowns){ //this will have two select tags
 const updateExchaneRate = async () => {
     let amount = document.querySelector("input");
     let amountValue = amount.value; //it stores the value of amount before changing amount.value
-    if(amountValue === "" || amountValue<1){
+    if (amountValue === "" || amountValue < 1) {
         amountValue = 1;
         amount.value = "1";
     }
-    const URL = `${BASE_URL}/${fromCurr.value.toLowerCase()}/${toCurr.value.toLowerCase()}.json`;
+    const URL = `${BASE_URL}/${fromCurr.value.toLowerCase()}.json`;
     let response = await fetch(URL);
     let data = await response.json();
-    let rate = data[toCurr.value.toLowerCase()];
+    let rate = data[fromCurr.value.toLowerCase()][toCurr.value.toLowerCase()];
     let finalAmount = amountValue * rate;
     msg.innerText = `${amountValue} ${fromCurr.value} = ${finalAmount} ${toCurr.value}`;
 }
