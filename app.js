@@ -4,12 +4,7 @@ const btn = document.querySelector("button");
 const fromCurr = document.querySelector(".from select");
 const toCurr = document.querySelector(".to select");
 const msg = document.querySelector(".msg");
-const currentDate = new Date();
-const year = currentDate.getFullYear();
-const month = currentDate.getMonth() + 1; // Month is 0-indexed, so add 1
-const day = currentDate.getDate();
 
-const date = day + "/" + month + "/" + year;
 
 for (let select of dropdowns) { //this will have two select tags
     for (currCode in countryList) { //countryList is an object with several keys and corresponding values. currCode will contain key, which is currency code.
@@ -40,6 +35,7 @@ const updateExchaneRate = async () => {
     let data = await response.json();
     let rate = data[fromCurr.value.toLowerCase()][toCurr.value.toLowerCase()];
     let finalAmount = amountValue * rate;
+    finalAmount = Math.round(finalAmount * 100) / 100;
     msg.innerText = `${amountValue} ${fromCurr.value} = ${finalAmount} ${toCurr.value}`;
 }
 
